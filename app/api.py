@@ -29,10 +29,7 @@ def health():
 
 @app.get("/model-info")
 def model_info():
-    return {
-        "name": src.config.MODEL_NAME,
-        "version": "1.0.0",
-    }
+    return src.config.MODEL_INFO[src.config.MODEL_NAME]
 
 @app.post(
     "/predict",

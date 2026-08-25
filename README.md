@@ -4,11 +4,10 @@
 
 [![CI](https://github.com/Ayush-Singh2309/jamboree-admission-predictor/actions/workflows/ci.yml/badge.svg)](https://github.com/Ayush-Singh2309/jamboree-admission-predictor/actions/workflows/ci.yml)
 
-<!-- ADD DEPLOYMENT URL HERE -->
-<!-- Example: **Live API:** [https://your-app.example.com](https://your-app.example.com) -->
+**Live Demo:** [https://jamboree-admission-predictor.streamlit.app](https://jamboree-admission-predictor.streamlit.app)  
 
-<!-- ADD ARCHITECTURE IMAGE OR DIAGRAM HERE -->
-<!-- Suggested path: docs/images/project-architecture.png -->
+**Live API:** [https://jamboree-admission-predictor-rfjw.onrender.com](https://jamboree-admission-predictor-rfjw.onrender.com)
+
 
 ## Project Overview
 
@@ -35,25 +34,14 @@ Graduate-admission applicants often want a realistic, data-informed estimate of 
 
 ## Project Architecture
 
-```mermaid
-flowchart LR
-    A[Raw Dataset] --> B[Data Preparation]
-    B --> C[Training Pipeline]
-    C --> D[Evaluation & Artifacts]
-    C --> E[MLflow Tracking]
-    D --> F[Saved Model]
-    F --> G[FastAPI Service]
-    G --> H[Docker Container]
-    I[GitHub Actions] --> J[Tests & Build]
-```
-
-<!-- ADD ARCHITECTURE IMAGE HERE IF YOU PREFER AN IMAGE OVER THE DIAGRAM ABOVE -->
+![architecture](images/Architecture.png)
 
 ## Folder Structure
 
 ```text
 jamboree-admission-predictor/
 ├── app/                    # FastAPI application and API schemas
+├── frontend/               # Streamlit application and dashboard
 ├── src/                    # Training, preprocessing, and utility modules
 ├── tests/                  # Unit and API tests
 ├── notebooks/              # Exploratory data analysis notebooks
@@ -68,8 +56,6 @@ jamboree-admission-predictor/
 └── LICENSE
 ```
 
-<!-- Update this tree if your repository uses different names or adds directories. -->
-
 ## Tech Stack
 
 | Area | Tools |
@@ -80,9 +66,9 @@ jamboree-admission-predictor/
 | API | FastAPI, Uvicorn, Pydantic |
 | Testing | pytest |
 | Containerization | Docker |
-| CI/CD | GitHub Actions |
-
-<!-- Replace or extend this table to match your actual dependencies. -->
+| CI | GitHub Actions |
+| Frontend | Streamlit |
+| Deployment | Render |
 
 ## Dataset
 
@@ -98,22 +84,22 @@ Typical input features include:
 - Undergraduate CGPA
 - Research experience
 
-<!-- ADD DATASET LINK HERE -->
-<!-- Example: Dataset source: [Kaggle — Graduate Admissions](https://www.kaggle.com/datasets/...) -->
+Dataset source: [Kaggle — Graduate Admissions](https://www.kaggle.com/code/imprime/graduate-admissions-dataset)
 
-<!-- ADD DATASET SUMMARY HERE: number of rows, missing values, train/test split, and any license notes. -->
 
 ## Experimentation
 
-Multiple regression models can be evaluated to select the most reliable approach for the problem. Typical candidates include Linear Regression, Ridge Regression, Lasso Regression, Random Forest, and Gradient Boosting.
+Multiple regression models can be evaluated to select the most reliable approach for the problem. Typical candidates include Linear Regression, Ridge Regression, Lasso Regression.
 
 Models should be compared using held-out test data and regression metrics such as R², RMSE, and MAE. The selected model is then serialized and used by the inference API.
 
-<!-- ADD MODEL COMPARISON TABLE HERE -->
 
 | Model | Test R² | RMSE | MAE |
 | --- | ---: | ---: | ---: |
-| <!-- Add model name --> | <!-- Add value --> | <!-- Add value --> | <!-- Add value --> |
+| Linear Regression | 0.81884 | 0.06087 | 0.04272 |
+| Ridge Regression | 0.81854 | 0.06092 | 0.04284 |
+| Lasso Regression | 0.81914 | 0.06082 | 0.04255 |
+
 
 ## Training Pipeline
 
@@ -127,8 +113,32 @@ The training workflow follows these stages:
 6. Save the trained model and evaluation artifacts.
 7. Log parameters, metrics, and artifacts to MLflow.
 
-<!-- ADD TRAINING PIPELINE DIAGRAM HERE -->
-<!-- Suggested path: docs/images/training-pipeline.png -->
+TRAINING PIPELINE DIAGRAM
+```text
+              Training Pipeline
+
+        raw DATA (Train, Validation, Test)
+                      │
+                      ▼
+             Validation/Cleaning/Splitting
+                      │
+                      ▼
+            Preprocessing/Model-Selection
+                      │
+                      ▼
+                 train.py
+                      │
+     ┌────────────────┼─────────────────┐
+     ▼                ▼                 ▼
+Evaluation       Artifacts         MLflow
+     │                │                 │
+     ▼                ▼                 ▼
+Metrics        Model + Plots      Experiment Logs
+     │                │
+     └────────────┬───┘
+                  ▼
+             model.pkl
+```
 
 ## MLflow Tracking
 
@@ -142,9 +152,14 @@ mlflow ui
 
 Then open `http://127.0.0.1:5000` in your browser.
 
-<!-- ADD MLFLOW EXPERIMENT SCREENSHOT HERE -->
-<!-- ADD MLFLOW RUN METRICS SCREENSHOT HERE -->
-<!-- ADD MLFLOW ARTIFACTS SCREENSHOT HERE -->
+Experiments:
+![MLflow Experiments](images/experiments.png)
+
+Runs:
+![MLflow Runs](images/runs.png)
+
+Artifacts:
+![MLflow Artifacts](images/artifacts.png)
 
 ## FastAPI API
 
@@ -154,28 +169,32 @@ The trained model is exposed through a FastAPI service. Once running, interactiv
 http://127.0.0.1:8000/docs
 ```
 
-<!-- ADD SWAGGER SCREENSHOT HERE -->
+Swagger UI:
+[Link](https://jamboree-admission-predictor-rfjw.onrender.com/docs)
+![Swagger](images/swagger.png)
 
-<!-- ADD DEPLOYED SWAGGER URL HERE -->
 
 ## Docker
 
 Docker packages the application and its dependencies into a portable image, ensuring the API behaves consistently across environments.
 
-<!-- ADD DOCKER IMAGE / CONTAINER SCREENSHOT HERE (OPTIONAL) -->
+Docker Image:
+![Docker Image](images/image.png)
+
+Docker Container:
+![Docker Container](images/container.png)
 
 ## CI/CD
 
-GitHub Actions runs automated checks on pushes and pull requests. A typical workflow installs dependencies, runs tests, and can optionally build the Docker image or deploy the service.
+GitHub Actions runs automated checks on pushes and pull requests. A typical workflow installs dependencies, runs tests, builds the Docker image and can optionally deploy the service.
 
-<!-- ADD GITHUB ACTIONS WORKFLOW SCREENSHOT HERE -->
-<!-- ADD GITHUB ACTIONS BADGE HERE IF NOT ADDED AT THE TOP -->
+![GitHub Actions](images/CI.png)
 
 ## Installation
 
 ### Prerequisites
 
-- Python 3.10 or later
+- Python 3.12 or later
 - `pip`
 - Docker (optional, for containerized usage)
 
@@ -188,7 +207,7 @@ cd <your-repository>
 python -m venv .venv
 source .venv/bin/activate  # Windows: .venv\Scripts\activate
 
-pip install -r requirements.txt
+pip install -r requirements-dev.txt
 ```
 
 ## Local Usage
@@ -196,10 +215,8 @@ pip install -r requirements.txt
 ### Train the model
 
 ```bash
-python src/models/train.py
+python -m src.train
 ```
-
-<!-- Update this command if your training entry point differs. -->
 
 Training produces the saved model and evaluation outputs in `artifacts/`.
 
@@ -211,12 +228,11 @@ uvicorn app.api:app --reload
 
 Open the Swagger UI at `http://127.0.0.1:8000/docs`.
 
-<!-- Update `app.api:app` if your FastAPI application has a different import path. -->
 
 ### Run tests
 
 ```bash
-pytest
+python -m pytest
 ```
 
 ## Docker Commands
@@ -224,66 +240,62 @@ pytest
 Build the image:
 
 ```bash
-docker build -t jamboree-admission-predictor .
+docker build -t jamboree-admission .
 ```
 
 Run the container:
 
 ```bash
-docker run --rm -p 8000:8000 jamboree-admission-predictor
+docker run -d -p 5000:9000 --name jamboree-admission-predictor jamboree-admission
 ```
 
-Visit `http://127.0.0.1:8000/docs` after the container starts.
+Visit `http://127.0.0.1:9000/docs` after the container starts.
 
-<!-- Update the image name, port, or command to match your Dockerfile. -->
 
 ## API Examples
 
 ### Health check
 
 ```bash
-curl http://127.0.0.1:8000/health
+curl http://127.0.0.1:9000/health
 ```
 
 ### Prediction request
 
 ```bash
-curl -X POST "http://127.0.0.1:8000/predict" \
+curl -X POST "http://127.0.0.1:9000/predict" \
   -H "Content-Type: application/json" \
   -d '{
-    "gre_score": 320,
-    "toefl_score": 110,
-    "university_rating": 4,
-    "sop": 4.5,
-    "lor": 4.5,
-    "cgpa": 9.1,
-    "research": 1
-  }'
+  "GRE_Score": 320,
+  "TOEFL_Score": 110,
+  "University_Rating": 4,
+  "SOP": 4.0,
+  "LOR": 4.0,
+  "CGPA": 9.0,
+  "Research": 1
+}'
 ```
 
 Example response:
 
 ```json
 {
-  "predicted_chance_of_admit": 0.82
+  "chance_of_admit": 0.8098
 }
 ```
 
-<!-- Verify endpoint paths, input field names, and response field names against your implementation. -->
-
 ## Results
-
-<!-- ADD FINAL TEST METRICS HERE -->
 
 | Metric | Value |
 | --- | ---: |
-| Test R² | <!-- Add value --> |
-| Test RMSE | <!-- Add value --> |
-| Test MAE | <!-- Add value --> |
+| Test R² | 0.81914 |
+| Test RMSE | 0.06082 |
+| Test MAE | 0.04255 |
 
-<!-- ADD RESIDUAL PLOT HERE -->
-<!-- ADD ACTUAL VS PREDICTED PLOT HERE -->
-<!-- ADD COEFFICIENT OR FEATURE-IMPORTANCE PLOT HERE, IF APPLICABLE -->
+![Actual vs Predicted Plot](artifacts/plots/actual_vs_predicted_plot.png)
+![QQ Plot](artifacts/plots/qq_plot.png)
+![Residual Distribution Plot](artifacts/plots/residual_distribution.png)
+![Residual Plot](artifacts/plots/residual_plot.png)
 
 ## Future Improvements
 
@@ -291,18 +303,12 @@ Example response:
 - Add hyperparameter optimization and model selection automation.
 - Introduce model and data versioning with DVC.
 - Add monitoring for prediction drift and API performance after deployment.
-- Add authentication, rate limiting, and structured logging to the API.
-- Deploy the container to a cloud platform with automated release workflows.
 
 ## Acknowledgements
 
 - Jamboree Education / the original dataset provider for the admissions dataset.
 - The open-source communities behind scikit-learn, FastAPI, MLflow, Docker, and pytest.
 
-<!-- ADD COURSE, MENTOR, OR DATASET ATTRIBUTION DETAILS HERE IF REQUIRED. -->
-
 ## License
 
 This project is licensed under the [MIT License](LICENSE).
-
-<!-- Add a LICENSE file to the repository, or change this section to match your chosen license. -->

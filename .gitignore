@@ -20,6 +20,11 @@ mlruns/
 mlflow.db
 
 pyrefly.toml
+images/
 
 # Environment
 .env
+
+# Ignore Mac system configuration files
+.DS_Store
+**/.DS_Store

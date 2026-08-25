@@ -20,7 +20,6 @@ mlruns/
 mlflow.db
 
 pyrefly.toml
-images/
 
 # Environment
 .env
